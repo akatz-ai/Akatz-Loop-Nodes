@@ -1,13 +1,13 @@
 [project]
-name = "comfyui-akatz-loop-nodes"
+name = "akatz-loop-nodes"
 description = "Custom nodes for loops, flow control, lazy switches, image processing, and latent manipulation."
 version = "0.1.0"
 license = { file = "LICENSE" }
 
 [project.urls]
-Repository = "https://github.com/akatz-ai/ComfyUI-Akatz-Loop-Nodes"
+Repository = "https://github.com/akatz-ai/Akatz-Loop-Nodes"
 
 [tool.comfy]
 PublisherId = "akatz"
-DisplayName = "Akatz Loop Nodes"
-Icon = "https://i.imgur.com/aiqQI7U.png"
+DisplayName = "Akatz-Loop-Nodes"
+Icon = "https://avatars.githubusercontent.com/u/170280086?v=4"
