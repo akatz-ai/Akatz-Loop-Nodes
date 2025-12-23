@@ -3,6 +3,7 @@ name = "akatz-loop-nodes"
 description = "Custom nodes for loops, flow control, lazy switches, image processing, and latent manipulation."
 version = "0.1.0"
 license = { file = "LICENSE" }
+dependencies = ["opencv-python"]
 
 [project.urls]
 Repository = "https://github.com/akatz-ai/Akatz-Loop-Nodes"
