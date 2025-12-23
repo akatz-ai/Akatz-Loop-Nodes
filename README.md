@@ -1,5 +1,9 @@
 # Akatz Loop Nodes for ComfyUI
 
+
+https://github.com/user-attachments/assets/fde8c0d5-180c-47fe-ba4a-5b1aeb29be66
+
+
 Custom nodes for loops, flow control, lazy switches, image processing, and latent manipulation.
 
 ## Node Categories
