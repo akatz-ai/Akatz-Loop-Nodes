@@ -1,4 +1,3 @@
-from comfy_execution.graph_utils import GraphBuilder
 import comfy.samplers
 import torch
 import random
@@ -8,6 +7,80 @@ from .base_node import NODE_POSTFIX, ListNode, LogicNode, FlowNode, DebugNode, U
 VALID_SAMPLERS = comfy.samplers.KSampler.SAMPLERS
 VALID_SCHEDULERS = comfy.samplers.KSampler.SCHEDULERS
 
+class SamplerSelector(UtilityNode):
+    """
+    Select a sampler from the list of valid samplers.
+    If use_override is True, the override_string is used instead of the sampler_name.
+    """
+    @classmethod
+    def INPUT_TYPES(cls):
+        return {
+            "required": {
+                "sampler_name": (VALID_SAMPLERS,),
+            },
+            "optional": {
+                "override_string": ("STRING", {"multiline": False}),
+                "use_override": ("BOOLEAN", {"default": False}),
+            },
+        }
+
+    RETURN_TYPES = (list(VALID_SAMPLERS),)
+    RETURN_NAMES = ("sampler",)
+    FUNCTION = "select"
+
+    def select(self, sampler_name: str, override_string: str = None, use_override: bool = False):
+        if use_override:
+            return (override_string,)
+        return (sampler_name,)
+    
+class SchedulerSelector(UtilityNode):
+    """
+    Select a scheduler from the list of valid schedulers.
+    If use_override is True, the override_string is used instead of the scheduler_name.
+    """
+    
+    @classmethod
+    def INPUT_TYPES(cls):
+        return {
+            "required": {
+                "scheduler_name": (VALID_SCHEDULERS,),
+            },
+            "optional": {
+                "override_string": ("STRING", {"multiline": False}),
+                "use_override": ("BOOLEAN", {"default": False}),
+            },
+        }
+
+    RETURN_TYPES = (list(VALID_SCHEDULERS),)
+    RETURN_NAMES = ("scheduler",)
+    FUNCTION = "select"
+
+    def select(self, scheduler_name: str, override_string: str = None, use_override: bool = False):
+        if use_override:
+            return (override_string,)
+        return (scheduler_name,)
+    
+class StringToCombo(UtilityNode):
+    """
+    Convert a string to a combo.
+    The input string is **trimmed** and **lower‑cased**.
+    """
+    
+    @classmethod
+    def INPUT_TYPES(cls):
+        return {
+            "required": {
+                "string": ("STRING", {"multiline": False}),
+            },
+        }
+    
+    RETURN_TYPES = ("COMBO","STRING", "*")
+    FUNCTION = "string_to_combo"
+    
+    def string_to_combo(self, string: str):
+        return (string.strip().lower(), string, string)
+    
+    
 @VariantSupport()
 class AccumulateNode(ListNode):
     def __init__(self):
@@ -337,38 +410,44 @@ class IntegerListGeneratorNode(ListNode):
                     integers.append(random.randint(0, 0xffffffff))
         
         return (integers,)
-
+    
 # Configuration for node display names
 
 UTILITY_NODE_CLASS_MAPPINGS = {
-    "AccumulateNode": AccumulateNode,
-    "AccumulationHeadNode": AccumulationHeadNode,
-    "AccumulationTailNode": AccumulationTailNode,
-    "AccumulationToListNode": AccumulationToListNode,
-    "ListToAccumulationNode": ListToAccumulationNode,
-    "AccumulationGetLengthNode": AccumulationGetLengthNode,
-    "AccumulationGetItemNode": AccumulationGetItemNode,
-    "AccumulationSetItemNode": AccumulationSetItemNode,
-    "DebugPrint": DebugPrint,
-    "MakeListNode": MakeListNode,
-    "GetFloatFromList": GetFloatFromList,
-    "GetIntFromList": GetIntFromList,
-    "IntegerListGeneratorNode": IntegerListGeneratorNode,
+    f"SamplerSelector{NODE_POSTFIX}": SamplerSelector,
+    f"SchedulerSelector{NODE_POSTFIX}": SchedulerSelector,
+    f"StringToCombo{NODE_POSTFIX}": StringToCombo,
+    f"AccumulateNode{NODE_POSTFIX}": AccumulateNode,
+    f"AccumulationHeadNode{NODE_POSTFIX}": AccumulationHeadNode,
+    f"AccumulationTailNode{NODE_POSTFIX}": AccumulationTailNode,
+    f"AccumulationToListNode{NODE_POSTFIX}": AccumulationToListNode,
+    f"ListToAccumulationNode{NODE_POSTFIX}": ListToAccumulationNode,
+    f"AccumulationGetLengthNode{NODE_POSTFIX}": AccumulationGetLengthNode,
+    f"AccumulationGetItemNode{NODE_POSTFIX}": AccumulationGetItemNode,
+    f"AccumulationSetItemNode{NODE_POSTFIX}": AccumulationSetItemNode,
+    f"DebugPrint{NODE_POSTFIX}": DebugPrint,
+    f"MakeListNode{NODE_POSTFIX}": MakeListNode,
+    f"GetFloatFromList{NODE_POSTFIX}": GetFloatFromList,
+    f"GetIntFromList{NODE_POSTFIX}": GetIntFromList,
+    f"IntegerListGeneratorNode{NODE_POSTFIX}": IntegerListGeneratorNode,
 }
 
 # Generate display names with configurable prefix
 UTILITY_NODE_DISPLAY_NAME_MAPPINGS = {
-    "AccumulateNode": f"Accumulate {NODE_POSTFIX}",
-    "AccumulationHeadNode": f"Accumulation Head {NODE_POSTFIX}",
-    "AccumulationTailNode": f"Accumulation Tail {NODE_POSTFIX}",
-    "AccumulationToListNode": f"Accumulation to List {NODE_POSTFIX}",
-    "ListToAccumulationNode": f"List to Accumulation {NODE_POSTFIX}",
-    "AccumulationGetLengthNode": f"Accumulation Get Length {NODE_POSTFIX}",
-    "AccumulationGetItemNode": f"Accumulation Get Item {NODE_POSTFIX}",
-    "AccumulationSetItemNode": f"Accumulation Set Item {NODE_POSTFIX}",
-    "DebugPrint": f"Debug Print {NODE_POSTFIX}",
-    "MakeListNode": f"Make List {NODE_POSTFIX}",
-    "GetFloatFromList": f"Get Float From List {NODE_POSTFIX}",
-    "GetIntFromList": f"Get Int From List {NODE_POSTFIX}",
-    "IntegerListGeneratorNode": f"Integer List Generator {NODE_POSTFIX}",
+    f"SamplerSelector{NODE_POSTFIX}": f"Sampler Selector {NODE_POSTFIX}",
+    f"SchedulerSelector{NODE_POSTFIX}": f"Scheduler Selector {NODE_POSTFIX}",
+    f"StringToCombo{NODE_POSTFIX}": f"String to Combo {NODE_POSTFIX}",
+    f"AccumulateNode{NODE_POSTFIX}": f"Accumulate {NODE_POSTFIX}",
+    f"AccumulationHeadNode{NODE_POSTFIX}": f"Accumulation Head {NODE_POSTFIX}",
+    f"AccumulationTailNode{NODE_POSTFIX}": f"Accumulation Tail {NODE_POSTFIX}",
+    f"AccumulationToListNode{NODE_POSTFIX}": f"Accumulation to List {NODE_POSTFIX}",
+    f"ListToAccumulationNode{NODE_POSTFIX}": f"List to Accumulation {NODE_POSTFIX}",
+    f"AccumulationGetLengthNode{NODE_POSTFIX}": f"Accumulation Get Length {NODE_POSTFIX}",
+    f"AccumulationGetItemNode{NODE_POSTFIX}": f"Accumulation Get Item {NODE_POSTFIX}",
+    f"AccumulationSetItemNode{NODE_POSTFIX}": f"Accumulation Set Item {NODE_POSTFIX}",
+    f"DebugPrint{NODE_POSTFIX}": f"Debug Print {NODE_POSTFIX}",
+    f"MakeListNode{NODE_POSTFIX}": f"Make List {NODE_POSTFIX}",
+    f"GetFloatFromList{NODE_POSTFIX}": f"Get Float From List {NODE_POSTFIX}",
+    f"GetIntFromList{NODE_POSTFIX}": f"Get Int From List {NODE_POSTFIX}",
+    f"IntegerListGeneratorNode{NODE_POSTFIX}": f"Integer List Generator {NODE_POSTFIX}",
 }

@@ -168,15 +168,15 @@ class LazyMixImages(LogicNode):
         return (image1 * (1. - mask) + image2 * mask,)
 
 GENERAL_NODE_CLASS_MAPPINGS = {
-    "LazySwitch": LazySwitch,
-    "LazyIndexSwitch": LazyIndexSwitch,
-    "LazyMixImages": LazyMixImages,
-    "LazyConditional": LazyConditional,
+    f"LazySwitch{NODE_POSTFIX}": LazySwitch,
+    f"LazyIndexSwitch{NODE_POSTFIX}": LazyIndexSwitch,
+    f"LazyMixImages{NODE_POSTFIX}": LazyMixImages,
+    f"LazyConditional{NODE_POSTFIX}": LazyConditional,
 }
 
 GENERAL_NODE_DISPLAY_NAME_MAPPINGS = {
-    "LazySwitch": f"Lazy Switch {NODE_POSTFIX}",
-    "LazyIndexSwitch": f"Lazy Index Switch {NODE_POSTFIX}",
-    "LazyMixImages": f"Lazy Mix Images {NODE_POSTFIX}",
-    "LazyConditional": f"Lazy Conditional {NODE_POSTFIX}",
+    f"LazySwitch{NODE_POSTFIX}": f"Lazy Switch {NODE_POSTFIX}",
+    f"LazyIndexSwitch{NODE_POSTFIX}": f"Lazy Index Switch {NODE_POSTFIX}",
+    f"LazyMixImages{NODE_POSTFIX}": f"Lazy Mix Images {NODE_POSTFIX}",
+    f"LazyConditional{NODE_POSTFIX}": f"Lazy Conditional {NODE_POSTFIX}",
 }

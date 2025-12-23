@@ -206,7 +206,7 @@ class ForLoopOpen(FlowNode):
         graph = GraphBuilder()
         if "initial_value0" in kwargs:
             remaining = kwargs["initial_value0"]
-        while_open = graph.node("WhileLoopOpen", condition=remaining, initial_value0=remaining, **{("initial_value%d" % i): kwargs.get("initial_value%d" % i, None) for i in range(1, NUM_FLOW_SOCKETS)})
+        while_open = graph.node(f"WhileLoopOpen{NODE_POSTFIX}", condition=remaining, initial_value0=remaining, **{("initial_value%d" % i): kwargs.get("initial_value%d" % i, None) for i in range(1, NUM_FLOW_SOCKETS)})
         outputs = [kwargs.get("initial_value%d" % i, None) for i in range(1, NUM_FLOW_SOCKETS)]
         return {
             "result": tuple(["stub", remaining] + outputs),
@@ -239,10 +239,10 @@ class ForLoopClose(FlowNode):
         while_open = flow_control[0]
         
         # Use our internal counter node instead of external dependencies
-        counter = graph.node("_ForLoopCounter", current_value=[while_open, 1])
+        counter = graph.node(f"_ForLoopCounter{NODE_POSTFIX}", current_value=[while_open, 1])
         
         input_values = {("initial_value%d" % i): kwargs.get("initial_value%d" % i, None) for i in range(1, NUM_FLOW_SOCKETS)}
-        while_close = graph.node("WhileLoopClose",
+        while_close = graph.node(f"WhileLoopClose{NODE_POSTFIX}",
                 flow_control=flow_control,
                 condition=counter.out(1),  # should_continue output
                 initial_value0=counter.out(0),  # decremented output
@@ -255,21 +255,21 @@ class ForLoopClose(FlowNode):
 
 # Configuration for node display names
 FLOW_CONTROL_NODE_CLASS_MAPPINGS = {
-    "WhileLoopOpen": WhileLoopOpen,
-    "WhileLoopClose": WhileLoopClose,
-    "ExecutionBlocker": ExecutionBlockerNode,
-    "ForLoopOpen": ForLoopOpen,
-    "ForLoopClose": ForLoopClose,
-    "_ForLoopCounter": _ForLoopCounter,  # Internal node, prefixed with underscore
+    f"WhileLoopOpen{NODE_POSTFIX}": WhileLoopOpen,
+    f"WhileLoopClose{NODE_POSTFIX}": WhileLoopClose,
+    f"ExecutionBlocker{NODE_POSTFIX}": ExecutionBlockerNode,
+    f"ForLoopOpen{NODE_POSTFIX}": ForLoopOpen,
+    f"ForLoopClose{NODE_POSTFIX}": ForLoopClose,
+    f"_ForLoopCounter{NODE_POSTFIX}": _ForLoopCounter,  # Internal node, prefixed with underscore
 }
 
 # Generate display names with configurable prefix
 # Note: _ForLoopCounter is not included in display names as it's internal
 FLOW_CONTROL_NODE_DISPLAY_NAME_MAPPINGS = {
-    "WhileLoopOpen": f"While Loop Open {NODE_POSTFIX}",
-    "WhileLoopClose": f"While Loop Close {NODE_POSTFIX}",
-    "ExecutionBlocker": f"Execution Blocker {NODE_POSTFIX}",
-    "ForLoopOpen": f"For Loop Open {NODE_POSTFIX}",
-    "ForLoopClose": f"For Loop Close {NODE_POSTFIX}",
+    f"WhileLoopOpen{NODE_POSTFIX}": f"While Loop Open {NODE_POSTFIX}",
+    f"WhileLoopClose{NODE_POSTFIX}": f"While Loop Close {NODE_POSTFIX}",
+    f"ExecutionBlocker{NODE_POSTFIX}": f"Execution Blocker {NODE_POSTFIX}",
+    f"ForLoopOpen{NODE_POSTFIX}": f"For Loop Open {NODE_POSTFIX}",
+    f"ForLoopClose{NODE_POSTFIX}": f"For Loop Close {NODE_POSTFIX}",
     # Intentionally not including _ForLoopCounter in display mappings
 }

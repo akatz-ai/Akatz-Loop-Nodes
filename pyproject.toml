@@ -1,13 +1,13 @@
 [project]
-name = "comfyui-execution-inversion"
-description = "Custom nodes for for loops, while loops, lazy nodes and switches etc."
-version = "0.0.4"
-license = { file = "LICENSE.txt" }
+name = "comfyui-akatz-loop-nodes"
+description = "Custom nodes for loops, flow control, lazy switches, image processing, and latent manipulation."
+version = "0.1.0"
+license = { file = "LICENSE" }
 
 [project.urls]
-Repository = "https://github.com/akatz-ai/ComfyUI-Execution-Inversion"
+Repository = "https://github.com/akatz-ai/ComfyUI-Akatz-Loop-Nodes"
 
 [tool.comfy]
 PublisherId = "akatz"
-DisplayName = "ComfyUI-Execution-Inversion"
+DisplayName = "Akatz Loop Nodes"
 Icon = "https://i.imgur.com/aiqQI7U.png"
